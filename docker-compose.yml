@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  fsfm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fsfm-cvpr25:latest
+    container_name: fsfm-training
+
+    # GPU configuration
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - CUDA_VISIBLE_DEVICES=0
+      # 자동 다운로드 설정
+      - DOWNLOAD_MODEL=vit-b  # 다운로드할 모델: vit-s, vit-b, vit-l, fsfm-vit-b, all
+      # - AUTO_DOWNLOAD_DATASET=true  # 데이터셋 자동 다운로드 (주의: 매우 큰 용량!)
+
+    # Volumes - mount local directories
+    volumes:
+      - ./fsvfm:/workspace/fsvfm
+      - ./datasets:/workspace/datasets
+      - ./data:/workspace/data
+      - ./outputs:/workspace/outputs
+      - ./logs:/workspace/logs
+      - ./checkpoints:/workspace/checkpoints
+      - ./scripts:/workspace/scripts
+      # Persistent storage for downloaded models and setup state
+      - pretrained_models:/workspace/fsvfm/pretrain/checkpoint/pretrained_models
+      - setup_state:/workspace/.setup_state
+
+    # Ports
+    ports:
+      - "8888:8888"  # Jupyter
+      - "6006:6006"  # Tensorboard
+
+    # Working directory
+    working_dir: /workspace
+
+    # Keep container running
+    stdin_open: true
+    tty: true
+
+    # Shared memory size (important for PyTorch DataLoader)
+    shm_size: '16gb'
+
+    # Resource limits (optional, adjust as needed)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+# Named volumes for persistent storage
+volumes:
+  pretrained_models:
+    driver: local
+  setup_state:
+    driver: local
