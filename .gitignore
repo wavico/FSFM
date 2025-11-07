@@ -43,6 +43,7 @@ venv.bak/
 *.safetensors
 model/
 models/
+checkpoint/
 checkpoints/
 weights/
 
