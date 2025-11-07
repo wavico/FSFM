@@ -92,14 +92,14 @@ tensorboard==2.11.2
 tensorboard-data-server==0.6.1
 tensorboard-plugin-wit==1.8.1
 threadpoolctl==3.1.0
-tifffile==2021.11.2
+tifffile>=2022.8.12
 timm==0.4.5
 torch-summary==1.4.5
 tornado==6.2
 tqdm==4.66.1
 traitlets==5.9.0
 traittypes==0.2.1
-typing_extensions==4.7.1
+typing_extensions>=4.10.0
 urllib3==1.26.16
 validators==0.20.0
 wcwidth==0.2.6
